@@ -1,5 +1,4 @@
 streamlit
-spacy
 nltk
 pymupdf
 sentence-transformers
