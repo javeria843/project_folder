@@ -1,12 +1,12 @@
-# ✅ main.py
 import os
 import csv
 import re
 import fitz  # PyMuPDF
-import spacy
 import nltk
 import streamlit as st
 import pandas as pd
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize
 from sentence_transformers import SentenceTransformer, util
 import google.generativeai as genai
 from dotenv import load_dotenv
@@ -14,6 +14,7 @@ from dotenv import load_dotenv
 # ========== Initial Setup ==========
 nltk.download("punkt")
 nltk.download("stopwords")
+stop_words = set(stopwords.words("english"))
 model_embed = SentenceTransformer("all-MiniLM-L6-v2")
 
 # ✅ Load Gemini API key from .env
@@ -36,8 +37,10 @@ def clean_text(text):
     return re.sub(r"\s+", " ", text.strip())
 
 def preprocess_text(text):
-    doc = nlp_spacy(text)
-    return " ".join([token.lemma_ for token in doc if not token.is_stop and token.is_alpha])
+    text = text.lower()
+    tokens = word_tokenize(text)
+    filtered = [word for word in tokens if word.isalpha() and word not in stop_words]
+    return " ".join(filtered)
 
 def get_embedding(text):
     return model_embed.encode(text, convert_to_tensor=True)
@@ -119,5 +122,3 @@ try:
         st.info("No history found yet. Upload resumes and job descriptions to begin!")
 except Exception as e:
     st.error(f"Error reading history: {e}")
-
-str
