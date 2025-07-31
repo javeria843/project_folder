@@ -1,0 +1,9 @@
+streamlit
+spacy
+nltk
+pymupdf
+sentence-transformers
+pandas
+python-dotenv
+google-generativeai
+
